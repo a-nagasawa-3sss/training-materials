@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Database Infrastructure - RDS Subnet Group and RDS Instance
+
+#-----------------------------------
+# Parameters
+#-----------------------------------
+Parameters:
+  NetworkStackName:
+    Type: String
+    Default: "Network-Stack"
+    Description: Name of the network stack to import values from
+
+Resources:
+#-----------------------------------
+# RDS
+#-----------------------------------
+  RDSSubnetGroup:
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties:
+      DBSubnetGroupName: "cfn-db-subnetgroup"
+      DBSubnetGroupDescription: "cfn-db-subnetgroup"
+      SubnetIds:
+        - !ImportValue
+            Fn::Sub: "${NetworkStackName}-PrivateSubnet1-ID"
+        - !ImportValue
+            Fn::Sub: "${NetworkStackName}-PrivateSubnet2-ID"
+      Tags:
+      - Key: "Name"
+        Value: "cfn-db-subnetgroup"
+  
+  RDSInstance:
+    Type: "AWS::RDS::DBInstance"
+    Properties:
+      DBInstanceIdentifier: "cfn-rds"
+      Engine: MySQL
+      EngineVersion: "8.0.41"
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: "20"
+      StorageType: gp2
+      DBName: RDS
+      DeletionProtection: false
+      DeleteAutomatedBackups: false
+      MasterUsername: "admin"
+      MasterUserPassword: "password"
+      PubliclyAccessible: false
+      MultiAZ: false
+      AutoMinorVersionUpgrade: false
+      VPCSecurityGroups:
+       - !ImportValue
+           Fn::Sub: "${NetworkStackName}-DBSG-ID"
+      CopyTagsToSnapshot: false
+      BackupRetentionPeriod: 0
+      DBSubnetGroupName: !Ref RDSSubnetGroup
+      Tags:
+        - Key: "Name"
+          Value: !Sub "cfn-rds"
+
+#-----------------------------------
+# Outputs
+#-----------------------------------
+Outputs:
+  RDSInstanceId:
+    Description: RDS Instance ID
+    Value: !Ref RDSInstance
+    Export:
+      Name: !Sub "${AWS::StackName}-RDS-ID"
+  
+  RDSEndpoint:
+    Description: RDS Endpoint
+    Value: !GetAtt RDSInstance.Endpoint.Address
+    Export:
+      Name: !Sub "${AWS::StackName}-RDS-Endpoint"

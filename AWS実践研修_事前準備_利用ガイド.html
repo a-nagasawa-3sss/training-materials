@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS実践研修 事前準備・利用ガイド</title>
+<style>
+  :root {
+    --accent: #ff9900;
+    --accent-dark: #232f3e;
+    --bg: #fafafa;
+    --card-bg: #ffffff;
+    --border: #e0e0e0;
+    --warn-bg: #fff4e5;
+    --warn-border: #ffb74d;
+    --ng-bg: #fdecea;
+    --ng-border: #e57373;
+    --ok-bg: #e8f5e9;
+    --ok-border: #81c784;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    background: var(--bg);
+    color: #222;
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+  }
+  .wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+  header.page-header {
+    background: var(--accent-dark);
+    color: #fff;
+    padding: 28px 20px;
+    margin-bottom: 24px;
+    border-radius: 0 0 8px 8px;
+  }
+  header.page-header h1 {
+    margin: 0 0 8px;
+    font-size: 1.6em;
+    border: none;
+  }
+  header.page-header p {
+    margin: 0;
+    color: var(--accent);
+    font-weight: bold;
+  }
+  h1, h2, h3 {
+    color: var(--accent-dark);
+  }
+  header h1 {
+    color: #fff;    
+  }
+  h2 {
+    border-left: 6px solid var(--accent);
+    padding: 6px 12px;
+    background: #fff3e0;
+    border-radius: 4px;
+    margin-top: 40px;
+  }
+  h3 {
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 4px;
+    margin-top: 28px;
+  }
+  section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 24px;
+    margin-bottom: 16px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: left;
+  }
+  th {
+    background: var(--accent-dark);
+    color: #fff;
+  }
+  tr:nth-child(even) td {
+    background: #f7f7f7;
+  }
+  code, pre {
+    font-family: "SFMono-Regular", Consolas, "Courier New", monospace;
+    background: #2d2d2d;
+    color: #f5f5f5;
+    border-radius: 4px;
+  }
+  code {
+    padding: 2px 6px;
+    font-size: 0.95em;
+  }
+  pre {
+    padding: 12px 16px;
+    overflow-x: auto;
+    margin: 10px 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  .note, .warn, .ng, .ok {
+    border-radius: 6px;
+    padding: 10px 16px;
+    margin: 12px 0;
+  }
+  .note {
+    background: var(--warn-bg);
+    border-left: 5px solid var(--warn-border);
+  }
+  .warn strong, .note strong {
+    color: #e65100;
+  }
+  .ng {
+    background: var(--ng-bg);
+    border-left: 5px solid var(--ng-border);
+  }
+  .ok {
+    background: var(--ok-bg);
+    border-left: 5px solid var(--ok-border);
+  }
+  .flow {
+    background: #f5f5f5;
+    border: 1px dashed #bbb;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  .flow span {
+    display: block;
+    padding: 2px 0;
+  }
+  .flow span.arrow {
+    color: var(--accent-dark);
+    font-weight: normal;
+    text-align: center;
+  }
+  ul, ol {
+    padding-left: 1.4em;
+  }
+  .checklist label {
+    display: block;
+    padding: 4px 0;
+    cursor: pointer;
+  }
+  .checklist input {
+    margin-right: 8px;
+    transform: scale(1.2);
+  }
+  .toc {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 24px;
+    margin-bottom: 24px;
+  }
+  .toc h2 {
+    margin-top: 0;
+  }
+  .toc ol {
+    columns: 2;
+    column-gap: 24px;
+  }
+  .toc a {
+    text-decoration: none;
+    color: #0066cc;
+  }
+  .toc a:hover {
+    text-decoration: underline;
+  }
+  @media print {
+    body { background: #fff; }
+    section, .toc { border: none; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<header class="page-header">
+  <h1>AWS実践研修 事前準備・利用ガイド</h1>
+  <p>無料利用・課金事故防止版</p>
+</header>
+
+<section>
+  <h2 id="target">対象</h2>
+  <p>本研修では以下のAWSサービスを利用します。</p>
+  <ul>
+    <li>VPC</li>
+    <li>EC2</li>
+    <li>RDS</li>
+    <li>S3</li>
+    <li>ALB（Application Load Balancer）</li>
+    <li>Systems Manager</li>
+    <li>CloudWatch</li>
+    <li>CloudFormation</li>
+    <li>Terraform</li>
+  </ul>
+  <p><strong>利用リージョン：</strong> 東京（ap-northeast-1）</p>
+
+  <div class="note">
+    <strong>【重要】2025年7月15日以降に作成したAWSアカウントについて</strong>
+    <p>2025年7月15日以降に新規作成したAWSアカウントは、最初から「無料プラン（Free Plan）」になります。</p>
+    <ul>
+      <li>サインアップ時に <strong>$100</strong>、初期タスクを完了するとさらに <strong>$100</strong>（合計最大 $200）のクレジットが付与される</li>
+      <li>無料プランの間は、クレジットの範囲内でのみ利用でき、<strong>自分で「有料プランへアップグレード」しない限り課金は発生しない</strong></li>
+      <li>無料プランは「<strong>6か月経過</strong>」または「<strong>クレジットを使い切る</strong>」のいずれか早いほうで終了する</li>
+      <li>クレジット残高が50%・25%・10%になった時点、および無料期間の終了15日前・7日前・2日前に通知メールが届く</li>
+    </ul>
+    <p>2025年7月15日より前に作成した既存アカウントは、従来どおり「12か月無料利用枠＋常時無料枠」が適用されます。</p>
+    <p>どちらのアカウントでも、本ガイドの予算設定・アラート設定・リソース削除の手順は<strong>課金事故防止の基本動作として有効</strong>です。</p>
+  </div>
+</section>
+
+<div class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#sec1">AWSアカウント作成</a></li>
+    <li><a href="#sec2">よくあるトラブル</a></li>
+    <li><a href="#sec3">Rootユーザーでログイン</a></li>
+    <li><a href="#sec4">MFA（多要素認証）設定【必須】</a></li>
+    <li><a href="#sec5">課金通知設定【必須】</a></li>
+    <li><a href="#sec6">無料利用枠アラート設定</a></li>
+    <li><a href="#sec7">コストエクスプローラー有効化</a></li>
+    <li><a href="#sec8">IAMユーザー作成【必須】</a></li>
+    <li><a href="#sec9">RootユーザーとIAMユーザーの違い</a></li>
+    <li><a href="#sec10">IAMユーザーサインインURL保存</a></li>
+    <li><a href="#sec11">ユーザー切り替え方法</a></li>
+    <li><a href="#sec12">Root利用禁止とは</a></li>
+    <li><a href="#sec13">研修期間中のログインルール</a></li>
+    <li><a href="#sec14">研修中の利用ルール</a></li>
+    <li><a href="#sec15">演習終了時の削除対象</a></li>
+    <li><a href="#sec16">放置した場合の課金リスク</a></li>
+    <li><a href="#sec17">課金アラートを受信したときの対応</a></li>
+    <li><a href="#sec18">研修終了時チェックリスト</a></li>
+  </ol>
+</div>
+
+<section id="sec1">
+  <h2>1. AWSアカウント作成</h2>
+  <ol>
+    <li>AWS公式サイトへアクセス：<a href="https://aws.amazon.com/jp/" target="_blank">https://aws.amazon.com/jp/</a></li>
+    <li>「AWSアカウントを作成」を選択
+      <ul><li>直接サインアップページへ進む場合：<a href="https://portal.aws.amazon.com/billing/signup" target="_blank">https://portal.aws.amazon.com/billing/signup</a></li></ul>
+    </li>
+  </ol>
+  <h3>注意事項</h3>
+  <ul>
+    <li>個人アカウントで作成すること</li>
+    <li>支払い方法（クレジットカード／デビットカード）の登録が必要
+      <ul><li>本人確認のため少額（1 USD程度）が一時的に保留され、後日返金される</li></ul>
+    </li>
+    <li>メールアドレスは個人利用可能なものを使用すること</li>
+    <li>作成途中でブラウザを閉じないこと</li>
+    <li>登録の途中で「Free plan」「Paid plan」の選択画面が表示された場合は、<strong>Free plan（無料プラン）</strong>を選択する</li>
+  </ul>
+</section>
+
+<section id="sec2">
+  <h2>2. よくあるトラブル</h2>
+
+  <h3>「指定されたメールアドレスは既に AWS アカウントに関連付けられています」</h3>
+  <p><strong>原因</strong><br>過去に同じメールアドレスでAWSアカウントを作成済み。</p>
+  <p><strong>対応</strong><br>新規作成せず、既存アカウントへログインする。</p>
+
+  <h3>「指定されたサインイン情報の AWS アカウントは存在しません」</h3>
+  <p><strong>原因</strong><br>IAMユーザーでログインしようとしている。</p>
+  <p><strong>対応</strong><br>Root user を選択してログインする。</p>
+
+  <h3>認証コードが届かない</h3>
+  <p><strong>原因</strong><br>アカウント作成途中ではなく既存アカウントである可能性が高い。</p>
+  <p><strong>対応</strong><br>パスワード再設定を実施する。</p>
+</section>
+
+<section id="sec3">
+  <h2>3. Rootユーザーでログイン</h2>
+  <ol>
+    <li>AWSサインイン画面へアクセス：<a href="https://console.aws.amazon.com/" target="_blank">https://console.aws.amazon.com/</a></li>
+    <li>「Root user」を選択</li>
+    <li>登録メールアドレスを入力</li>
+    <li>パスワードを入力</li>
+    <li>サインイン</li>
+  </ol>
+  <div class="note"><strong>注意：</strong> IAMユーザーではありません。</div>
+</section>
+
+<section id="sec4">
+  <h2>4. MFA（多要素認証）設定【必須】</h2>
+  <ol>
+    <li>右上のアカウント名をクリック</li>
+    <li>「セキュリティ認証情報」を選択
+      <ul><li>直接アクセスする場合：<a href="https://console.aws.amazon.com/iam/home#/security_credentials" target="_blank">https://console.aws.amazon.com/iam/home#/security_credentials</a></li></ul>
+    </li>
+    <li>「多要素認証（MFA）」を選択</li>
+    <li>「MFAを割り当て」をクリック</li>
+  </ol>
+  <p><strong>推奨：</strong> Google Authenticator</p>
+  <p><strong>完了条件</strong><br>ログイン時に認証コード入力が要求されること。</p>
+</section>
+
+<section id="sec5">
+  <h2>5. 課金通知設定【必須】</h2>
+  <ol>
+    <li>右上のアカウントメニューから「請求と支払い」を選択</li>
+    <li>「予算」を選択
+      <ul><li>直接アクセスする場合：<a href="https://console.aws.amazon.com/billing/home#/budgets" target="_blank">https://console.aws.amazon.com/billing/home#/budgets</a></li></ul>
+    </li>
+    <li>「予算を作成」をクリック</li>
+  </ol>
+
+  <div class="note">
+    <strong>補足（無料プランのアカウントの場合）</strong>
+    <p>無料プランのアカウントには、クレジット残高に応じた通知（残り50%・25%・10%、無料期間終了15日前・7日前・2日前）がAWSから自動的に届きます。<br>
+    ただし、これは「クレジットの消費状況」の通知であり、コスト管理の練習として以下の予算設定も必ず行ってください。</p>
+  </div>
+
+  <h3>予算設定</h3>
+  <table>
+    <tr><th>項目</th><th>設定値</th></tr>
+    <tr><td>予算設定</td><td>カスタマイズ</td></tr>
+    <tr><td>予算タイプ</td><td>コスト予算</td></tr>
+    <tr><td>予算設定方法</td><td>固定</td></tr>
+    <tr><td>予算額</td><td>1 USD（※AWS仕様により0 USDは設定不可）</td></tr>
+    <tr><td>期間</td><td>毎月</td></tr>
+    <tr><td>予算の範囲</td><td>すべて</td></tr>
+    <tr><td>コスト集計基準</td><td>非ブレンドコスト</td></tr>
+  </table>
+
+  <h3>通知設定</h3>
+  <p><strong>通知①</strong></p>
+  <ul>
+    <li>予測コスト</li>
+    <li>超過</li>
+    <li>80%</li>
+    <li>通知先：自身のメールアドレス</li>
+  </ul>
+  <p><strong>通知②</strong></p>
+  <ul>
+    <li>実績コスト</li>
+    <li>超過</li>
+    <li>100%</li>
+    <li>通知先：自身のメールアドレス</li>
+  </ul>
+
+  <div class="warn">
+    <strong>注意：</strong> 通知 ≠ 自動停止<br>
+    通知が届いてもAWSは自動停止しません。
+  </div>
+</section>
+
+<section id="sec6">
+  <h2>6. 無料利用枠アラート設定</h2>
+  <ol>
+    <li>「請求と支払い」を選択
+      <ul><li>直接アクセスする場合：<a href="https://console.aws.amazon.com/billing/home#/preferences" target="_blank">https://console.aws.amazon.com/billing/home#/preferences</a></li></ul>
+    </li>
+    <li>「Billing preferences（請求設定）」を選択</li>
+    <li>「Receive AWS Free Tier alerts（AWS無料利用枠アラートを受け取る）」にチェック</li>
+    <li>「保存」をクリック</li>
+  </ol>
+  <div class="note"><strong>補足：</strong> 既定では、無料利用枠の85%に達した時点でメール通知が届くように設定されています。</div>
+</section>
+
+<section id="sec7">
+  <h2>7. コストエクスプローラー有効化</h2>
+  <ol>
+    <li>「請求と支払い」を選択</li>
+    <li>「コストエクスプローラー」を選択
+      <ul><li>直接アクセスする場合：<a href="https://console.aws.amazon.com/cost-management/home#/cost-explorer" target="_blank">https://console.aws.amazon.com/cost-management/home#/cost-explorer</a></li></ul>
+    </li>
+    <li>「有効化」をクリック</li>
+  </ol>
+  <div class="note"><strong>注意：</strong> 初回は「準備中」となる場合があります。数分～数時間程度で利用可能になります。</div>
+</section>
+
+<section id="sec8">
+  <h2>8. IAMユーザー作成【必須】</h2>
+  <ol>
+    <li>検索バーで「IAM」を検索
+      <ul><li>直接アクセスする場合：<a href="https://console.aws.amazon.com/iam/home#/users" target="_blank">https://console.aws.amazon.com/iam/home#/users</a></li></ul>
+    </li>
+    <li>「ユーザー」を選択</li>
+    <li>「ユーザーを作成」をクリック</li>
+  </ol>
+
+  <h3>設定内容</h3>
+  <table>
+    <tr><th>項目</th><th>設定値</th></tr>
+    <tr><td>ユーザー名</td><td><code>training-user</code></td></tr>
+    <tr><td>権限</td><td>ポリシーを直接アタッチ → <code>AdministratorAccess</code></td></tr>
+  </table>
+  <p>最後に「作成」をクリック。</p>
+
+  <div class="note">
+    <strong>補足：</strong> AWSは現在、人が利用するアクセス手段として「IAM Identity Center」の利用を推奨していますが、複数アカウント管理を前提とした仕組みのため、個人で1アカウントのみを使う本研修では、シンプルな<strong>IAMユーザー方式</strong>で進めます。
+  </div>
+</section>
+
+<section id="sec9">
+  <h2>9. RootユーザーとIAMユーザーの違い</h2>
+
+  <h3>Rootユーザー</h3>
+  <p>AWSアカウント作成時に登録したメールアドレスのアカウント。AWSアカウントの最高権限を持つ。</p>
+  <p><strong>Rootユーザーでしかできない操作</strong></p>
+  <ul>
+    <li><strong>アカウント管理</strong>
+      <ul>
+        <li>AWSアカウント閉鎖</li>
+        <li>Rootメールアドレス変更</li>
+        <li>Rootパスワード変更</li>
+      </ul>
+    </li>
+    <li><strong>支払い管理</strong>
+      <ul>
+        <li>クレジットカード変更</li>
+        <li>支払い方法変更</li>
+      </ul>
+    </li>
+    <li><strong>セキュリティ管理</strong>
+      <ul>
+        <li>Root MFA設定・解除</li>
+      </ul>
+    </li>
+    <li><strong>緊急復旧</strong>
+      <ul>
+        <li>IAMユーザーを誤削除した場合の復旧</li>
+        <li>IAM権限を誤設定した場合の復旧</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>IAMユーザー</h3>
+  <p>AWS内で作成する運用ユーザー。</p>
+  <ul>
+    <li>今回作成するユーザー：<code>training-user</code></li>
+    <li>権限：<code>AdministratorAccess</code></li>
+  </ul>
+
+  <p><strong>IAMユーザーを使う理由</strong></p>
+  <p>AWS公式推奨：「Rootは初期設定のみ、日常運用はIAM」</p>
+  <p>研修で利用する以下のサービスは全てIAMユーザーで利用可能です。</p>
+  <ul>
+    <li>VPC</li>
+    <li>EC2</li>
+    <li>RDS</li>
+    <li>S3</li>
+    <li>ALB</li>
+    <li>Systems Manager</li>
+    <li>CloudWatch</li>
+    <li>CloudFormation</li>
+    <li>Terraform</li>
+  </ul>
+</section>
+
+<section id="sec10">
+  <h2>10. IAMユーザーサインインURL保存</h2>
+  <ol>
+    <li>IAMダッシュボードを開く</li>
+    <li>「IAMユーザーサインインURL」を確認</li>
+  </ol>
+  <p><strong>例：</strong></p>
+  <pre><code>https://123456789012.signin.aws.amazon.com/console</code></pre>
+  <div class="note">※実際のURLは各自異なります。<strong>必ずブックマークしてください。</strong></div>
+</section>
+
+<section id="sec11">
+  <h2>11. ユーザー切り替え方法</h2>
+
+  <h3>Root → IAM</h3>
+  <div class="flow">
+    <span>右上のアカウント名から「サインアウト」</span>
+    <span class="arrow">↓</span>
+    <span>IAMユーザーサインインURLへアクセス</span>
+    <span class="arrow">↓</span>
+    <span>ユーザー名：training-user / パスワード / MFAコード を入力</span>
+    <span class="arrow">↓</span>
+    <span>サインイン</span>
+  </div>
+
+  <h3>IAM → Root</h3>
+  <div class="flow">
+    <span>右上のアカウント名から「サインアウト」</span>
+    <span class="arrow">↓</span>
+    <span>AWSサインイン画面で「Root user」を選択</span>
+    <span class="arrow">↓</span>
+    <span>メールアドレス / パスワード / MFAコード を入力</span>
+    <span class="arrow">↓</span>
+    <span>サインイン</span>
+  </div>
+</section>
+
+<section id="sec12">
+  <h2>12. Root利用禁止とは</h2>
+  <p><strong>意味</strong><br>Rootユーザーで日常のAWS運用を行わないこと。</p>
+
+  <h3>NG例</h3>
+  <div class="ng flow">
+    <span>Rootログイン → EC2作成 → RDS作成 → S3作成</span>
+  </div>
+
+  <h3>OK例</h3>
+  <div class="ok flow">
+    <span>Rootログイン → MFA設定 → 予算設定 → IAMユーザー作成 → サインアウト</span>
+  </div>
+
+  <p>以降は <strong>IAMユーザーでログインして作業する</strong>。</p>
+</section>
+
+<section id="sec13">
+  <h2>13. 研修期間中のログインルール</h2>
+  <ul>
+    <li><strong>初回のみ：</strong> Rootユーザー → 初期設定</li>
+    <li><strong>2回目以降：</strong> IAMユーザー（<code>training-user</code>）を利用する</li>
+  </ul>
+</section>
+
+<section id="sec14">
+  <h2>14. 研修中の利用ルール</h2>
+
+  <h3>利用可能サービス</h3>
+  <ul>
+    <li>VPC</li>
+    <li>EC2</li>
+    <li>RDS</li>
+    <li>S3</li>
+    <li>ALB</li>
+    <li>CloudWatch</li>
+    <li>Systems Manager</li>
+    <li>CloudFormation</li>
+    <li>Terraform</li>
+  </ul>
+
+  <h3>利用禁止</h3>
+  <div class="ng">
+    <strong>NAT Gateway</strong><br>
+    理由：短時間で課金が発生するため。
+  </div>
+
+  <h3>RDS利用ルール</h3>
+  <p>利用時は以下を使用する。</p>
+  <ul>
+    <li><code>db.t3.micro</code></li>
+    <li>Single-AZ</li>
+  </ul>
+  <p>演習でMulti-AZを利用した場合は、必ず <strong>Single-AZへ戻す</strong> または <strong>削除する</strong>。</p>
+</section>
+
+<section id="sec15">
+  <h2>15. 演習終了時の削除対象</h2>
+  <table>
+    <tr><th>サービス</th><th>削除対象</th></tr>
+    <tr><td>EC2</td><td>インスタンス終了（Terminate）</td></tr>
+    <tr><td>RDS</td><td>データベース削除（Delete）</td></tr>
+    <tr><td>ALB</td><td>ロードバランサー削除</td></tr>
+    <tr><td>Target Group</td><td>削除</td></tr>
+    <tr><td>S3</td><td>オブジェクト削除 → バケット削除</td></tr>
+    <tr><td>CloudFormation</td><td>スタック削除（Delete Stack）</td></tr>
+    <tr><td>Terraform</td><td><code>terraform destroy</code> 実行</td></tr>
+    <tr><td>CloudWatch</td><td>アラーム削除・ダッシュボード削除・ログ削除</td></tr>
+  </table>
+</section>
+
+<section id="sec16">
+  <h2>16. 放置した場合の課金リスク</h2>
+  <ul>
+    <li><strong>EC2：</strong> 起動状態のまま放置 → 時間課金継続</li>
+    <li><strong>RDS：</strong> 作成したまま放置 → 時間課金継続</li>
+    <li><strong>ALB：</strong> 作成したまま放置 → 時間課金継続</li>
+    <li><strong>Multi-AZ：</strong> 有効のまま放置 → プライマリ＋スタンバイの2台分課金</li>
+    <li><strong>Terraform：</strong> 削除忘れ → 作成したAWSリソースが課金継続</li>
+  </ul>
+</section>
+
+<section id="sec17">
+  <h2>17. 課金アラートを受信したときの対応【重要】</h2>
+  <p>予算アラートやFree Planのクレジット残量通知が届いたら、以下の手順で対応します。</p>
+
+  <h3>Step 1: どのサービスで費用が発生しているか確認する</h3>
+  <ol>
+    <li>「請求と支払い」→「Bills（請求書）」で進行中の費用を確認
+      <ul><li><a href="https://console.aws.amazon.com/billing/home#/bills" target="_blank">https://console.aws.amazon.com/billing/home#/bills</a></li></ul>
+    </li>
+    <li>「コストエクスプローラー」でサービス別のコストを確認
+      <ul><li><a href="https://console.aws.amazon.com/cost-management/home#/cost-explorer" target="_blank">https://console.aws.amazon.com/cost-management/home#/cost-explorer</a></li></ul>
+    </li>
+  </ol>
+  <div class="note"><strong>注意：</strong> コストの反映には最大24時間程度のタイムラグがあります。アラートを受信した時点では「すでに課金対象のリソースが起動している」前提で対応してください。</div>
+
+  <h3>Step 2: サービスごとの停止・削除方法</h3>
+  <table>
+    <tr><th>サービス</th><th>操作</th><th>手順 / URL</th></tr>
+    <tr>
+      <td>EC2 インスタンス</td>
+      <td>終了（Terminate）</td>
+      <td>インスタンス一覧 → 対象を選択 →「インスタンスの状態」→「インスタンスを終了」<br>
+        <a href="https://console.aws.amazon.com/ec2/home?region=ap-northeast-1#Instances" target="_blank">EC2インスタンス一覧（東京リージョン）</a></td>
+    </tr>
+    <tr>
+      <td>EBSボリューム</td>
+      <td>削除</td>
+      <td>EC2画面 →「ボリューム」→ 未使用（available）のボリュームを選択 → 削除</td>
+    </tr>
+    <tr>
+      <td>Elastic IP</td>
+      <td>リリース</td>
+      <td>EC2画面 →「Elastic IP」→ 未関連付けのアドレスを選択 →「Elastic IPアドレスの解放」</td>
+    </tr>
+    <tr>
+      <td>RDS</td>
+      <td>削除（Delete）</td>
+      <td>データベース一覧 → 対象を選択 →「アクション」→「削除」<br>
+        <a href="https://console.aws.amazon.com/rds/home?region=ap-northeast-1#databases:" target="_blank">RDSデータベース一覧（東京リージョン）</a></td>
+    </tr>
+    <tr>
+      <td>ALB</td>
+      <td>削除</td>
+      <td>EC2画面 →「ロードバランサー」→ 対象を選択 →「アクション」→「削除」</td>
+    </tr>
+    <tr>
+      <td>Target Group</td>
+      <td>削除</td>
+      <td>EC2画面 →「ターゲットグループ」→ 対象を選択 →「アクション」→「削除」</td>
+    </tr>
+    <tr>
+      <td>NAT Gateway</td>
+      <td>削除</td>
+      <td>VPC画面 →「NATゲートウェイ」→ 対象を選択 →「アクション」→「削除」</td>
+    </tr>
+    <tr>
+      <td>S3</td>
+      <td>オブジェクト削除 → バケット削除</td>
+      <td>バケットを開く → 全オブジェクト選択 →「削除」→ バケット自体を削除（バージョニング有効時は全バージョン・削除マーカーも削除）</td>
+    </tr>
+    <tr>
+      <td>CloudWatch</td>
+      <td>アラーム／ダッシュボード／ロググループ削除</td>
+      <td>各メニューから対象を選択して削除</td>
+    </tr>
+    <tr>
+      <td>CloudFormation</td>
+      <td>スタック削除（Delete Stack）</td>
+      <td>スタック選択 →「削除」（関連リソースも一括削除される）</td>
+    </tr>
+    <tr>
+      <td>Terraform</td>
+      <td><code>terraform destroy</code></td>
+      <td>作成したリソース一式をまとめて削除</td>
+    </tr>
+  </table>
+
+  <div class="warn">
+    <strong>特に注意（課金が残りやすいもの）</strong>
+    <ul>
+      <li>EC2を「停止（Stop）」しただけではEBSボリュームの課金は止まりません。不要であれば終了（Terminate）してください。</li>
+      <li>未使用のElastic IP・EBSボリューム・NATゲートウェイは、他のリソースを削除した後も単独で課金が継続します。</li>
+      <li>RDSの「最終スナップショットを作成」を有効にすると、スナップショット分のストレージ課金が継続します。研修データが不要な場合はチェックを外してください。</li>
+    </ul>
+  </div>
+
+  <h3>Step 3: 削除後の確認</h3>
+  <ol>
+    <li>全リソース削除後、対象リージョン（東京 / ap-northeast-1）で「実行中のリソースなし」を確認する</li>
+    <li>コストエクスプローラーで翌日以降のコストが減少していることを確認する（即時には反映されません）</li>
+    <li>不明な点がある場合は、AWSサポート（ベーシックサポートは無料）に問い合わせる
+      <ul><li><a href="https://console.aws.amazon.com/support/home" target="_blank">https://console.aws.amazon.com/support/home</a></li></ul>
+    </li>
+  </ol>
+  <div class="note"><strong>再確認：</strong> アラートは「通知」のみで自動停止ではありません。アラートを受信したら、上記の手順で<strong>自分で</strong>リソースを停止・削除してください。</div>
+</section>
+
+<section id="sec18">
+  <h2>18. 研修終了時チェックリスト</h2>
+  <div class="checklist">
+    <label><input type="checkbox"> EC2削除済</label>
+    <label><input type="checkbox"> RDS削除済</label>
+    <label><input type="checkbox"> ALB削除済</label>
+    <label><input type="checkbox"> Target Group削除済</label>
+    <label><input type="checkbox"> S3削除済</label>
+    <label><input type="checkbox"> CloudFormation削除済</label>
+    <label><input type="checkbox"> terraform destroy実施済</label>
+    <label><input type="checkbox"> 東京リージョン確認</label>
+    <label><input type="checkbox"> コストエクスプローラー確認</label>
+    <label><input type="checkbox"> 利用中リソースなし</label>
+  </div>
+  <p>上記を満たした状態で研修終了とします。</p>
+</section>
+
+</div>
+</body>
+</html>

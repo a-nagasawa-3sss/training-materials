@@ -1,0 +1,228 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Network Infrastructure - VPC, Subnets, RouteTable, InternetGateway, SecurityGroups
+
+#-----------------------------------
+# Parameters
+#-----------------------------------
+Parameters:
+  AvailabilityZone1:
+    Type: String
+    Default: "ap-northeast-1a"
+    Description: "az-1a"
+  AvailabilityZone2:
+    Type: String
+    Default: "ap-northeast-1c"
+    Description: "az-1c"
+
+Resources:
+#-----------------------------------
+# VPC
+#-----------------------------------
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: "cfn-vpc"
+
+#-----------------------------------
+# Subnet
+#-----------------------------------
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone1
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      Tags:
+        - Key: Name
+          Value: "cfn-public-subnet1"
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone2
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.2.0/24
+      Tags:
+        - Key: Name
+          Value: "cfn-public-subnet2"
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone1
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.3.0/24
+      Tags:
+        - Key: Name
+          Value: "cfn-private-subnet1"
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone2
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.4.0/24
+      Tags:
+        - Key: Name
+          Value: "cfn-private-subnet2"
+
+#-----------------------------------
+# RouteTable
+#-----------------------------------
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: "cfn-public-rtb"
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: "cfn-private-rtb"
+
+#-----------------------------------
+# SubnetRouteTableAssociation
+#-----------------------------------
+  PublicSubnetAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+  PublicSubnetAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref PublicRouteTable
+  PrivateSubnetAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+  PrivateSubnetAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
+
+#-----------------------------------
+# InternetGateway
+#-----------------------------------
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: "cfn-igw"
+  InternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+  InternetGatewayToRouteTable:
+    Type: "AWS::EC2::Route"
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+      RouteTableId: !Ref PublicRouteTable
+
+#-----------------------------------
+# Security Group
+#-----------------------------------
+  EC2SG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref VPC
+      GroupName: "ec2-cfn-sg"
+      GroupDescription: "ec2-cfn-sg"
+      Tags:
+        - Key: Name
+          Value: "ec2-cfn-sg"
+  DBSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref VPC
+      GroupName: "db-cfn-sg"
+      GroupDescription: "db-cfn-sg"
+      Tags:
+        - Key: Name
+          Value: "db-cfn-sg"
+
+#-----------------------------------
+# SG(Security Group) Rules
+#-----------------------------------
+  EC2SGIngress1:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref EC2SG
+      IpProtocol: tcp
+      FromPort: 80
+      ToPort: 80
+      CidrIp: 0.0.0.0/0
+  EC2SGIngress2:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref EC2SG
+      IpProtocol: tcp
+      FromPort: 22
+      ToPort: 22
+      CidrIp: 3.112.23.0/29
+  DBSGIngress1:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref DBSG
+      IpProtocol: tcp
+      FromPort: 3306
+      ToPort: 3306
+      SourceSecurityGroupId: !Ref EC2SG
+
+#-----------------------------------
+# Outputs
+#-----------------------------------
+Outputs:
+  VPCId:
+    Description: VPC ID
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VPC-ID"
+  
+  PublicSubnet1Id:
+    Description: Public Subnet 1 ID
+    Value: !Ref PublicSubnet1
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnet1-ID"
+  
+  PublicSubnet2Id:
+    Description: Public Subnet 2 ID
+    Value: !Ref PublicSubnet2
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnet2-ID"
+  
+  PrivateSubnet1Id:
+    Description: Private Subnet 1 ID
+    Value: !Ref PrivateSubnet1
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateSubnet1-ID"
+  
+  PrivateSubnet2Id:
+    Description: Private Subnet 2 ID
+    Value: !Ref PrivateSubnet2
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateSubnet2-ID"
+  
+  EC2SGId:
+    Description: EC2 Security Group ID
+    Value: !Ref EC2SG
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2SG-ID"
+  
+  DBSGId:
+    Description: DB Security Group ID
+    Value: !Ref DBSG
+    Export:
+      Name: !Sub "${AWS::StackName}-DBSG-ID"

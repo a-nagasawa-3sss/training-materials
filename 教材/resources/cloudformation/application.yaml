@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Application Infrastructure - IAM Role and EC2 Instance
+
+Parameters:
+  LatestAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
+    Description: Latest Amazon Linux 2023 AMI ID
+  NetworkStackName:
+    Type: String
+    Default: "Network-Stack"
+    Description: Name of the network stack to import values from
+
+Resources:
+  ServerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/EC2InstanceConnect
+
+  ServerProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref ServerRole
+      InstanceProfileName: "ec2-cfn-role"
+
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref ServerProfile
+      ImageId: !Ref LatestAmiId
+      InstanceType: t3.micro
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: "0"
+          DeleteOnTermination: true
+          GroupSet:
+            - !ImportValue
+                "Fn::Sub": "${NetworkStackName}-EC2SG-ID"
+          SubnetId: !ImportValue
+            "Fn::Sub": "${NetworkStackName}-PublicSubnet1-ID"
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          sudo dnf update -y
+          sudo dnf install -y nginx mysql ncurses-compat-libs
+          sudo systemctl enable --now nginx
+      Tags:
+        - Key: Name
+          Value: "ec2-cfn-instance"
+
+Outputs:
+  InstanceId:
+    Description: EC2 Instance ID
+    Value: !Ref Instance
+    Export:
+      Name: !Sub "${AWS::StackName}-Instance-ID"
